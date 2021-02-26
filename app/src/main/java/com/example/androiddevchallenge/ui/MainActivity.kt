@@ -13,16 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.androiddevchallenge
+package com.example.androiddevchallenge.ui
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.rememberNavController
+import com.example.androiddevchallenge.ui.detail.DetailScreen
+import com.example.androiddevchallenge.ui.home.HomeScreen
+import com.example.androiddevchallenge.ui.navigation.Actions
+import com.example.androiddevchallenge.ui.navigation.Destinations.DetailArgs.taskId
+import com.example.androiddevchallenge.ui.navigation.Destinations.detail
+import com.example.androiddevchallenge.ui.navigation.Destinations.home
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
@@ -39,8 +50,22 @@ class MainActivity : AppCompatActivity() {
 // Start building your app here!
 @Composable
 fun MyApp() {
+    val navController = rememberNavController()
+    val actions = remember(navController) { Actions(navController) }
+
     Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+        NavHost(navController = navController, startDestination = home) {
+            composable(home) { HomeScreen(openDetails = actions.openDetail) }
+            composable(
+                route = "$detail/{$taskId}",
+                arguments = listOf(navArgument(taskId) { type = NavType.StringType })
+            ) {
+                DetailScreen(
+                    message = it.arguments?.getString(taskId) ?: "",
+                    navigateBack = actions.navigateBack
+                )
+            }
+        }
     }
 }
 
