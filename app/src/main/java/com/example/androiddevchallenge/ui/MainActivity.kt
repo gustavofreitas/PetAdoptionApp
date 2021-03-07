@@ -19,22 +19,17 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavType
-import androidx.navigation.compose.*
-import com.example.androiddevchallenge.ui.detail.DetailScreen
-import com.example.androiddevchallenge.ui.home.HomeScreen
+import androidx.navigation.compose.rememberNavController
 import com.example.androiddevchallenge.ui.navigation.Actions
-import com.example.androiddevchallenge.ui.navigation.Destinations.DetailArgs.taskId
-import com.example.androiddevchallenge.ui.navigation.Destinations.detail
-import com.example.androiddevchallenge.ui.navigation.Destinations.home
+import com.example.androiddevchallenge.ui.navigation.DefineNavigation
 import com.example.androiddevchallenge.ui.theme.MyTheme
 import com.example.androiddevchallenge.ui.theme.beige
-import com.example.androiddevchallenge.ui.theme.teal200
 
 @ExperimentalFoundationApi
 class MainActivity : AppCompatActivity() {
@@ -56,18 +51,7 @@ fun MyApp() {
     val actions = remember(navController) { Actions(navController) }
 
     Surface(color = beige) {
-        NavHost(navController = navController, startDestination = home) {
-            composable(home) { HomeScreen(openDetails = actions.openDetail) }
-            composable(
-                route = "$detail/{$taskId}",
-                arguments = listOf(navArgument(taskId) { type = NavType.StringType })
-            ) {
-                DetailScreen(
-                    message = it.arguments?.getString(taskId) ?: "",
-                    navigateBack = actions.navigateBack
-                )
-            }
-        }
+        DefineNavigation(navController = navController, actions = actions)
     }
 }
 
