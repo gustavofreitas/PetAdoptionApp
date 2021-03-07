@@ -1,9 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
 }
 
 android {
+
     compileSdkVersion 30
 
     defaultConfig {
@@ -40,6 +42,10 @@ android {
         jvmTarget = "1.8"
     }
 
+    androidExtensions {
+        experimental = true
+    }
+
     buildFeatures {
         compose true
 
@@ -53,6 +59,10 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
+    }
+
+    androidExtensions {
+        experimental = true
     }
 
     packagingOptions {
