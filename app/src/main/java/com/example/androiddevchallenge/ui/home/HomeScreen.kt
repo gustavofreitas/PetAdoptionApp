@@ -1,14 +1,15 @@
 package com.example.androiddevchallenge.ui.home
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,23 +25,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androiddevchallenge.R
+import com.example.androiddevchallenge.domain.entity.Pet
+import com.example.androiddevchallenge.ui.common.CircularImage
+
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
+@Composable
+fun HomeScreen(openDetails: (Pet) -> Unit, model: HomeViewModel = viewModel()) {
+    val image = painterResource(R.drawable.cat_funny_face)
+    val pets by model.pets.observeAsState(listOf())
+
+    PetCardList(pets = pets) {
+        PetCard(it, image, openDetails)
+    }
+}
 
 @ExperimentalFoundationApi
 @Composable
-fun HomeScreen(openDetails: (String) -> Unit, model: HomeViewModel = viewModel()) {
-   val listState = rememberLazyListState()
-    val image = painterResource(R.drawable.cat_funny_face)
-
-    val pets by model.pets.observeAsState(listOf())
-
+fun PetCardList(
+    pets: List<Pet>,
+    listItem: @Composable (Pet) -> Unit
+) {
     LazyVerticalGrid(
         GridCells.Adaptive(150.dp),
-        contentPadding = PaddingValues(8.dp),
-        state = listState,
+        contentPadding = PaddingValues(8.dp)
     ) {
         items(items = pets) {
             Box(Modifier.padding(8.dp)) {
-                PetCard(petName = it, image, openDetails)
+                listItem(it)
             }
         }
     }
@@ -48,33 +60,40 @@ fun HomeScreen(openDetails: (String) -> Unit, model: HomeViewModel = viewModel()
 }
 
 @Composable
-fun PetCard(petName: String, image: Painter, openDetails: (String) -> Unit) {
+fun PetCard(data: Pet, image: Painter, openDetails: (Pet) -> Unit) {
     Card(
-        Modifier
-            .clickable { openDetails(petName) },
+        modifier = Modifier
+            .clickable { openDetails(data) },
         elevation = 4.dp
     ) {
-            Column(Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(painter = image, null)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = petName,
-                    textAlign = TextAlign.Center,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularImage(image)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = data.name,
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 fun PreviewPetCard() {
-    PetCard(petName = "Snow", painterResource(R.drawable.cat_funny_face)) { }
+    PetCard(data = Pet("Snow"), painterResource(R.drawable.cat_funny_face)) { }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Preview
 @Composable
 fun PreviewHome() {
-    HomeScreen(openDetails = { /*TODO*/ })
+    Surface(color = MaterialTheme.colors.surface) {
+        HomeScreen(openDetails = { /*TODO*/ })
+    }
 }

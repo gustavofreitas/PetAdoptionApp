@@ -1,5 +1,6 @@
 package com.example.androiddevchallenge.ui.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -33,6 +34,7 @@ class Actions(navController: NavHostController) {
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun DefineNavigation(navController: NavHostController, actions: Actions) {
@@ -41,12 +43,16 @@ fun DefineNavigation(navController: NavHostController, actions: Actions) {
         composable(
             route = detail,
         ) {
-            navController.previousBackStackEntry?.arguments?.getParcelable<Pet>(pet)?.let {
-                DetailScreen(
-                    data = it,
-                    navigateBack = actions.navigateBack
-                )
-            }
+            navController
+                .previousBackStackEntry
+                ?.arguments
+                ?.getParcelable<Pet>(pet)
+                ?.let {
+                    DetailScreen(
+                        data = it,
+                        navigateBack = actions.navigateBack
+                    )
+                }
         }
     }
 }

@@ -18,12 +18,13 @@ package com.example.androiddevchallenge.ui
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.androiddevchallenge.ui.navigation.Actions
@@ -33,6 +34,7 @@ import com.example.androiddevchallenge.ui.theme.beige
 
 @ExperimentalFoundationApi
 class MainActivity : AppCompatActivity() {
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -44,17 +46,22 @@ class MainActivity : AppCompatActivity() {
 }
 
 // Start building your app here!
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
     val actions = remember(navController) { Actions(navController) }
 
-    Surface(color = beige) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = beige
+    ) {
         DefineNavigation(navController = navController, actions = actions)
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
@@ -64,6 +71,7 @@ fun LightPreview() {
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Preview("Dark Theme", widthDp = 360, heightDp = 640)
 @Composable

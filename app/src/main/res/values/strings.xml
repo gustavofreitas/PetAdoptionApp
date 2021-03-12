@@ -10,4 +10,12 @@
       the License.
       -->
     <string name="app_name">AndroidDevChallenge</string>
+
+    <string name="label_pedigree">Pedigree</string>
+    <string name="label_color">Color</string>
+    <string name="label_Sex">Sex</string>
+    <string name="label_description">Description</string>
+
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 </resources>
